@@ -9,13 +9,6 @@ define([
   ],
   function(require, $, _, Backbone, Handlebars, selector_tmpl, controls_tmpl) {
 
-  var exports;
-  exports = {
-    QoogrController: QoogrController,
-    GraphSelectorView: GraphSelectorView,
-    GrapHControlsView: GraphControlsView,
-  };
-
   var QoogrController = Backbone.View.extend({
 
     el: $('qoogr-box'),
@@ -111,7 +104,12 @@ define([
 
   });
 
-  return exports;
+  // Return exports.
+  return {
+    QoogrController: QoogrController,
+    GraphSelectorView: GraphSelectorView,
+    GrapHControlsView: GraphControlsView,
+  };
 
 });
 
