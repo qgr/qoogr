@@ -41,7 +41,7 @@ define([
       require([graph], function(graph) {
         t.$('svg').remove();
         t.graph = new graph({
-          el: t.$('#graph')[0],
+          el: t.$('#qoogr-graph')[0],
           global_q: t.global_q
         });
       });
