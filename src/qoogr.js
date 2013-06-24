@@ -1,4 +1,4 @@
-define({
+define([
     'jquery',
     'underscore',
     'backbone',
@@ -8,17 +8,29 @@ define({
   ],
   function(require, _, $, Backbone, Handlebars, selector_tmpl, controls_tmpl) {
 
+  var exports;
+  exports = {
+    QoogrController: QoogrController,
+    GraphSelectorView: GraphSelectorView,
+    GrapHControlsView: GraphControlsView,
+  };
+
   var QoogrController = Backbone.View.extend({
 
     el: $('qoogr-box'),
 
-    initialize: function() {
+    initialize: function(options) {
       _.bindAll(this, 'load_graph', 'update_graph')
-      this.sel = new GraphSelectorView();
+      this.sel_class = this.options.selector_class || GraphSelectorView;
+      this.controls_class = this.options.selector_class || GraphControlsView;
+
+      this.sel = new this.sel_class();
       this.sel.on('load_graph', this.load_graph);
+
       this.global_q = new Backbone.Model({w: {}});
       this.global_q.on('change', this.update_graph);
-      this.controls = new GraphControlsView({
+
+      this.controls = new this.controls_class({
         global_q: this.global_q,
       });
     },
@@ -98,7 +110,7 @@ define({
 
   });
 
-  window.qoogr_con = new QoogrController();
+  return exports;
 
 });
 
