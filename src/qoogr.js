@@ -16,7 +16,7 @@ define([
     initialize: function(options) {
       _.bindAll(this, 'load_graph', 'update_graph')
       this.sel_class = this.options.selector_class || SelectorView;
-      this.controls_class = this.options.selector_class || ControlsView;
+      this.controls_class = this.options.controls_class || ControlsView;
 
       this.sel = new this.sel_class();
       this.sel.on('load_graph', this.load_graph);
@@ -95,6 +95,8 @@ define([
       this.global_q = this.options.global_q;
       this.render();
       // Set up individual filter widgets here.
+
+
     },
 
     render: function() {
