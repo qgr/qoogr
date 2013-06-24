@@ -9,14 +9,14 @@ define([
   ],
   function(require, $, _, Backbone, Handlebars, selector_tmpl, controls_tmpl) {
 
-  var QoogrController = Backbone.View.extend({
+  var Controller = Backbone.View.extend({
 
     el: $('qoogr-box'),
 
     initialize: function(options) {
       _.bindAll(this, 'load_graph', 'update_graph')
-      this.sel_class = this.options.selector_class || GraphSelectorView;
-      this.controls_class = this.options.selector_class || GraphControlsView;
+      this.sel_class = this.options.selector_class || SelectorView;
+      this.controls_class = this.options.selector_class || ControlsView;
 
       this.sel = new this.sel_class();
       this.sel.on('load_graph', this.load_graph);
@@ -53,7 +53,7 @@ define([
 
   });
 
-  var GraphSelectorView = Backbone.View.extend({
+  var SelectorView = Backbone.View.extend({
 
     el: $('#qoogr-selector'),
 
@@ -85,7 +85,7 @@ define([
   });
 
 
-  var GraphControlsView = Backbone.View.extend({
+  var ControlsView = Backbone.View.extend({
 
     el: '#qoogr-controls',
 
@@ -106,9 +106,9 @@ define([
 
   // Return exports.
   return {
-    QoogrController: QoogrController,
-    GraphSelectorView: GraphSelectorView,
-    GrapHControlsView: GraphControlsView,
+    Controller: Controller,
+    SelectorView: SelectorView,
+    ControlsView: ControlsView,
   };
 
 });
