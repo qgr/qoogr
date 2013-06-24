@@ -68,7 +68,7 @@ define([
       'click li': 'load_view',
     },
 
-    $tmpl: $(Handlebars.compile(nav_tmpl)()),
+    $tmpl: $(Handlebars.compile(selector_tmpl)()),
 
     initialize: function() {
       this.render();
