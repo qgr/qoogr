@@ -1,55 +1,12 @@
-require.config({
-    baseUrl: "static/src/",
-    paths: {
-      'text': '../vendor/require/text',
-      'json': '../vendor/require/json',
-      'underscore': '../vendor/underscore/underscore',
-      'zepto': '../vendor/zepto/zepto',
-      'zepto_fx': '../vendor/zepto/fx_methods',
-      'handlebars': '../vendor/handlebars/handlebars',
-      'backbone': '../vendor/backbone/backbone',
-      'd3': '../vendor/d3/d3.v3',
-      'topojson': '../vendor/topojson/topojson'
-    },
-    shim: {
-        'underscore': {
-            exports: '_'
-        },
-        'zepto': {
-          exports: '$'
-        },
-        'zepto_fx': {
-          deps: ['zepto'],
-        },
-        'handlebars': {
-          exports: 'Handlebars'
-        },
-        'backbone': {
-            //These script dependencies should be loaded before loading
-            //backbone.js
-            deps: ['underscore'],
-            //Once loaded, use the global 'Backbone' as the
-            //module value.
-            exports: 'Backbone'
-        },
-        'd3': {
-          exports: 'd3'
-        },
-        'topojson': {
-          exports: 'topojson'
-        }
-    }
-});
-
-requirejs([
-    'require',
-    'zepto',
+define({
+    'jquery',
+    'underscore',
     'backbone',
     'handlebars',
     'text!tmpl/selector.html',
     'text!tmpl/controls.html',
   ],
-  function(require, $, Backbone, Handlebars, selector_tmpl, controls_tmpl) {
+  function(require, _, $, Backbone, Handlebars, selector_tmpl, controls_tmpl) {
 
   var QoogrController = Backbone.View.extend({
 
