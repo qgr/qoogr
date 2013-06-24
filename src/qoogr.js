@@ -11,7 +11,7 @@ define([
 
   var Controller = Backbone.View.extend({
 
-    el: $('qoogr-box'),
+    el: $('#qoogr-box'),
 
     initialize: function(options) {
       _.bindAll(this, 'load_graph', 'update_graph')
