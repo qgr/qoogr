@@ -1,4 +1,5 @@
 define([
+    'require',
     'jquery',
     'underscore',
     'backbone',
@@ -6,7 +7,7 @@ define([
     'text!tmpl/selector.html',
     'text!tmpl/controls.html',
   ],
-  function(require, _, $, Backbone, Handlebars, selector_tmpl, controls_tmpl) {
+  function(require, $, _, Backbone, Handlebars, selector_tmpl, controls_tmpl) {
 
   var exports;
   exports = {
