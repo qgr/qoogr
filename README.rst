@@ -125,21 +125,41 @@ controls that map to different attributes to be filtered on, but map to the
 same line within a linechart. You may have multiple ControlSets that map to
 different elements within a single graph or different graphs entirely.
 
-Query Tree and Query Executor
-=============================
+Query Mapper, Query Tree, Query Executor
+========================================
 
-The Query Tree object is a representation of a query as a JavaScript object
-encapsulated within a `Backbone`_ Model. It is used by the Query Executor to
-transform a raw dataset to an array or object that can be consumed directly by
-`D3`_. Query Executors are not limited to querying in-browser datasets, and can
-be used to load data from remote data sources as well, such as relational
-databases. A server-side tool to translate the JSON-serialized Query Tree to
-SQL has been published as `quijibo`_.  Utilizing the in-browser `IndexedDB`_
+`qoogr`_ depends on `quijibo`_ for query representation and execution. The
+two component types of `quijibo`_ that provide this are the Query Tree and
+Query Executor.
+
+The Query Tree object is a representation of a query as a JSON object.
+The Query Tree format is specified by the `quijibo`_ project, and can
+represent a wide range of queries on a single tabular dataset (table, or array).
+The Query Tree format provides query constructs that are commonly performed
+on the client-side: filters, aggregation, column selections, limits, and
+ordering. Minus joins and subselects, it can be considered a mirror of "basic"
+SQL.
+
+The Query Mapper creates and updates the Query Tree when the controls are
+changed. Each control is mapped to a sub-tree in the Query Tree, which may
+correspond to a filter subclause, or an aggregration/grouping.
+
+The Query Executor then performs the query represented by the Query Tree and
+returns with an array that can be consumed directly by `D3`_. There are
+many possible implementation of the Query Executor - the simplest being
+one which operates on JavaScript Arrays, published as `qjb-qexec-array`_.
+Query Executors are not limited to querying in-browser datasets, and can be
+used to load data from remote data sources as well, such as relational
+databases using `qjb-qexec-sqlalchemy`_. Utilizing the in-browser `IndexedDB`_
 persistent storage is also possible - the Query Tree is an abstract
 representation of a query, therefore the Query Executor that can have different
 realizations.
 
 .. _quijibo: https://github.com/sprin/quijibo
+
+.. _qjb-qexec-array: https://github.com/sprin/qjb-qexec-array
+
+.. _qjb-qexec-sqlalchemy: https://github.com/sprin/qjb-qexec-sqlalchemy
 
 .. _IndexedDB: https://developer.mozilla.org/en-US/docs/IndexedDB/Basic_Concepts_Behind_IndexedDB
 
