@@ -106,11 +106,9 @@ Graph Controls
 The graph controls will be built with subclasses of a **qoogr** graph control
 class.  Only a small amount of configuration is required to realize a
 customized graph control. In the case of a list of selectable choices (checkbox
-list), only the list of options needs to be specified. The graph control will
-then communicate to the **qoogr** Query Tree object the part of the query it
-represents. The controls may represent filters, changes to the displayed
-attributes, and any other user-configurable modification to the query
-or graph display.
+list), only the list of options needs to be specified. The controls may
+represent filters, changes to the displayed attributes, and any other
+user-configurable modification to the query or graph display.
 
 Each Graph Control is backed by a either a `Backbone`_ Model or Collection,
 depending on if the control can represent a single value or set of values.
@@ -142,7 +140,10 @@ SQL.
 
 The Query Mapper creates and updates the Query Tree when the controls are
 changed. Each control is mapped to a sub-tree in the Query Tree, which may
-correspond to a filter subclause, or an aggregration/grouping.
+correspond to a filter subclause, or an aggregration/grouping. The abstraction
+layer between the Query Mapper and the controls is the ControlSet, which
+centralizes the data the controls represents. The Query Mapper reads each of
+data models in the ControlSet and maps them to the appropriate sub-trees.
 
 The Query Executor then performs the query represented by the Query Tree and
 returns with an array that can be consumed directly by `D3`_. There are
