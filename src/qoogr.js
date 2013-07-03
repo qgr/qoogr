@@ -76,7 +76,7 @@ define(function (require) {
       });
 
       // TODO: Apply initial filters, if any.
-      var raw_data = t.array_map[t.graph_config.from];
+      var raw_data = t.get_raw_data();
 
       // Dynamically load the new graph module, if not yet loaded.
       require([t.graph_config.graph], function(graph) {
@@ -90,16 +90,18 @@ define(function (require) {
     },
 
     update_graph: function() {
+      this.graph.update(this.get_raw_data());
+    },
+
+    get_raw_data: function() {
       var t = this;
       var qtree = t.qmapper.qtree;
       qtree.select.from = t.graph_config.from;
 
-      var raw_data = t.qexec.execute_query(
+      return t.qexec.execute_query(
         t.array_map,
         t.qmapper.qtree
       );
-      console.log(raw_data)
-      this.graph.update(raw_data);
     }
 
   });
@@ -160,7 +162,8 @@ define(function (require) {
     initialize: function(options) {
       _.bindAll(this, 'map_controls');
       this.controls = options.controls;
-      this.controls.on('change', this.map_controls)
+      this.controls.on('change', this.map_controls);
+      this.map_controls();
     },
 
     map_controls: function() {
