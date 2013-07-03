@@ -12,11 +12,27 @@ define(function (require) {
   var Controller = function(options) {
     this.initialize.apply(this, arguments);
   }
+
   // Extend Controller with Backbone Events
   _.extend(Controller.prototype, Backbone.Events, {
+
     // Default initialize is a no-op.
     initialize: function(){},
+
   });
+
+  // Function to proxy an event on one object to another.
+  var proxy = function(object, event) {
+    var t = this;
+    object.on(event, function() {
+      t.trigger(event);
+    });
+  }
+
+  // Give Controllers and Views proxy.
+  Controller.prototype.proxy = Backbone.View.prototype.proxy = proxy;
+
+
   // Makes Controllers extendable like all other Backbone classes.
   Controller.extend = Backbone.View.extend;
 
