@@ -137,13 +137,9 @@ define(function (require) {
       }
       // Alias the toplevel and subclause for brevity.
       var and = qtree.select.where.and;
-      // Construct subclauses from control data models, eg:
-      // and.push({
-      //   in: [
-      //     'type',
-      //     t.controls.my_type_collection.checked()
-      //   ]
-      // });
+
+      // Push subclauses from control data models into query tree.
+      // and.push(t.controls.my_collection.get_subtree());
 
       // Fire change event to alert listeners qtree has changed.
       t.trigger('change');
