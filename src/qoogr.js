@@ -17,6 +17,8 @@ define(function (require) {
     // Default initialize is a no-op.
     initialize: function(){},
   });
+  // Makes Controllers extendable like all other Backbone classes.
+  Controller.extend = Backbone.View.extend;
 
   var QoogrView = Backbone.View.extend({
 
@@ -26,17 +28,19 @@ define(function (require) {
       var t = this;
       _.bindAll(t, 'load_graph', 'update_graph')
       t.sel_class = t.options.selector_class || SelectorView;
+      t.qmapper_class = t.options.qmapper_class || QueryMapper;
       t.controls_class = t.options.controls_class || ControlsView;
 
       t.sel = new t.sel_class();
       t.sel.on('load_graph', t.load_graph);
 
-      t.global_q = new Backbone.Model({w: {}});
-      t.global_q.on('change', t.update_graph);
+      t.controls = new t.controls_class();
 
-      t.controls = new t.controls_class({
-        global_q: t.global_q,
+      t.qmapper = new t.qmapper_class({
+        controls: t.controls
       });
+
+      t.qmapper.on('change', t.update_graph);
     },
 
     load_graph: function(graph) {
@@ -102,10 +106,8 @@ define(function (require) {
     $tmpl: $(Handlebars.compile(controls_tmpl)()),
 
     initialize: function(options) {
-      this.global_q = this.options.global_q;
       this.render();
       // Set up individual filter widgets here.
-
 
     },
 
@@ -116,12 +118,46 @@ define(function (require) {
 
   });
 
+  var QueryMapper = Controller.extend({
+
+    initialize: function(options) {
+      this.controls = options.controls;
+    },
+
+    map_controls: function() {
+      var t = this;
+      // Build a new qtree by reading each control's data model.
+      // The following is a stub for a basic filter qtree.
+      t.qtree = {
+        select: {
+          where: {
+            and: []
+          }
+        }
+      }
+      // Alias the toplevel and subclause for brevity.
+      var and = qtree.select.where.and;
+      // Construct subclauses from control data models, eg:
+      // and.push({
+      //   in: [
+      //     'type',
+      //     t.controls.my_type_collection.checked()
+      //   ]
+      // });
+
+      // Fire change event to alert listeners qtree has changed.
+      t.trigger('change');
+    }
+
+  });
+
   // Return exports.
   return {
     Controller: Controller,
     QoogrView: QoogrView,
     SelectorView: SelectorView,
     ControlsView: ControlsView,
+    QueryMapper: QueryMapper,
   };
 
 });
