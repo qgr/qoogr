@@ -137,7 +137,9 @@ define(function (require) {
   var QueryMapper = Controller.extend({
 
     initialize: function(options) {
+      _.bindAll(this, 'map_controls');
       this.controls = options.controls;
+      this.controls.on('change', this.map_controls)
     },
 
     map_controls: function() {
@@ -152,7 +154,7 @@ define(function (require) {
         }
       }
       // Alias the toplevel and subclause for brevity.
-      var and = qtree.select.where.and;
+      var and = t.qtree.select.where.and;
 
       // Push subclauses from control data models into query tree.
       // and.push(t.controls.my_collection.get_subtree());
