@@ -9,23 +9,34 @@ define([
   ],
   function(require, $, _, Backbone, Handlebars, selector_tmpl, controls_tmpl) {
 
-  var Controller = Backbone.View.extend({
+  // A Controller is really just a generic base class.
+  var Controller = function(options) {
+    this.initialize.apply(this, arguments);
+  }
+  // Extend Controller with Backbone Events
+  _.extend(Controller.prototype, Backbone.Events, {
+    // Default initialize is a no-op.
+    initialize: function(){},
+  });
+
+  var QoogrView = Backbone.View.extend({
 
     el: $('#qoogr-box'),
 
     initialize: function(options) {
-      _.bindAll(this, 'load_graph', 'update_graph')
-      this.sel_class = this.options.selector_class || SelectorView;
-      this.controls_class = this.options.controls_class || ControlsView;
+      var t = this;
+      _.bindAll(t, 'load_graph', 'update_graph')
+      t.sel_class = t.options.selector_class || SelectorView;
+      t.controls_class = t.options.controls_class || ControlsView;
 
-      this.sel = new this.sel_class();
-      this.sel.on('load_graph', this.load_graph);
+      t.sel = new t.sel_class();
+      t.sel.on('load_graph', t.load_graph);
 
-      this.global_q = new Backbone.Model({w: {}});
-      this.global_q.on('change', this.update_graph);
+      t.global_q = new Backbone.Model({w: {}});
+      t.global_q.on('change', t.update_graph);
 
-      this.controls = new this.controls_class({
-        global_q: this.global_q,
+      t.controls = new t.controls_class({
+        global_q: t.global_q,
       });
     },
 
@@ -33,7 +44,7 @@ define([
 
       var t = this;
       //Resize graph area to fit viewport.
-      this.$('#qoogr-graph').css({
+      t.$('#qoogr-graph').css({
         width: $(window).width() - 30,
         height: $(window).height() - 30,
       });
@@ -109,6 +120,7 @@ define([
   // Return exports.
   return {
     Controller: Controller,
+    QoogrView: QoogrView,
     SelectorView: SelectorView,
     ControlsView: ControlsView,
   };
