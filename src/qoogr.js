@@ -42,9 +42,12 @@ define(function (require) {
 
     initialize: function(options) {
       var t = this;
-      _.bindAll(t, 'load_graph', 'update_graph')
+      _.bindAll(t, 'load_graph', 'update_graph');
+      t.array_map = t.options.array_map;
+      t.graph_config_map = t.options.graph_config_map;
       t.sel_class = t.options.selector_class || SelectorView;
       t.qmapper_class = t.options.qmapper_class || QueryMapper;
+      t.qexec = t.options.qexec;
       t.controls_class = t.options.controls_class || ControlsView;
 
       t.sel = new t.sel_class();
@@ -62,23 +65,41 @@ define(function (require) {
     load_graph: function(graph) {
 
       var t = this;
-      //Resize graph area to fit viewport.
+
+      // Set the graph config to that of newly-selected graph.
+      t.graph_config = t.graph_config_map[graph];
+
+      // Resize graph area to fit viewport.
       t.$('#qoogr-graph').css({
         width: $(window).width() - 30,
         height: $(window).height() - 30,
       });
 
-      require([graph], function(graph) {
+      // TODO: Apply initial filters, if any.
+      var raw_data = t.array_map[t.graph_config.from];
+
+      // Dynamically load the new graph module, if not yet loaded.
+      require([t.graph_config.graph], function(graph) {
         t.$('svg').remove();
         t.graph = new graph({
           el: t.$('#qoogr-graph')[0],
-          global_q: t.global_q
+          graph_config: t.graph_config,
+          raw_data: raw_data
         });
       });
     },
 
     update_graph: function() {
-      this.graph.update();
+      var t = this;
+      var qtree = t.qmapper.qtree;
+      qtree.select.from = t.graph_config.from;
+
+      var raw_data = t.qexec.execute_query(
+        t.array_map,
+        t.qmapper.qtree
+      );
+      console.log(raw_data)
+      this.graph.update(raw_data);
     }
 
   });
