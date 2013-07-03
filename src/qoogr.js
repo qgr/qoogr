@@ -1,13 +1,12 @@
-define([
-    'require',
-    'jquery',
-    'underscore',
-    'backbone',
-    'handlebars',
-    'text!tmpl/selector.html',
-    'text!tmpl/controls.html',
-  ],
-  function(require, $, _, Backbone, Handlebars, selector_tmpl, controls_tmpl) {
+// Qoogr Core
+
+define(function (require) {
+  var $ = require('jquery');
+  var _ = require('underscore');
+  var Backbone = require('backbone');
+  var Handlebars = require('handlebars');
+  var selector_tmpl = require('text!tmpl/selector.html');
+  var controls_tmpl = require('text!tmpl/controls.html');
 
   // A Controller is really just a generic base class.
   var Controller = function(options) {
