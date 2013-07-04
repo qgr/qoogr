@@ -46,28 +46,15 @@ define(function (require) {
       t.array_map = t.options.array_map;
       t.graph_config_map = t.options.graph_config_map;
       t.sel_class = t.options.selector_class || SelectorView;
-      t.qmapper_class = t.options.qmapper_class || QueryMapper;
       t.qexec = t.options.qexec;
-      t.controls_class = t.options.controls_class || ControlsView;
 
       t.sel = new t.sel_class();
       t.sel.on('load_graph', t.load_graph);
-
-      t.controls = new t.controls_class();
-
-      t.qmapper = new t.qmapper_class({
-        controls: t.controls
-      });
-
-      t.qmapper.on('change', t.update_graph);
     },
 
     load_graph: function(graph) {
 
       var t = this;
-
-      // Set the graph config to that of newly-selected graph.
-      t.graph_config = t.graph_config_map[graph];
 
       // Resize graph area to fit viewport.
       t.$('#qoogr-graph').css({
@@ -75,18 +62,48 @@ define(function (require) {
         height: $(window).height() - 30,
       });
 
-      // TODO: Apply initial filters, if any.
-      var raw_data = t.get_raw_data();
+      // Set the graph config to that of newly-selected graph.
+      t.graph_config = t.graph_config_map[graph];
 
       // Dynamically load the new graph module, if not yet loaded.
       require([t.graph_config.graph], function(graph) {
-        t.$('svg').remove();
+
+        // Teardown old graph.
+        t.teardown_graph();
+
+
+        // Get the Query Mapper and ControlsView from the graph config.
+        t.qmapper_class = t.graph_config.qmapper || QueryMapper;
+        t.controls_class = t.graph_config.controls || ControlsView;
+
+        // Initialize new Query Mapper and ControlsView
+        t.controls = new t.controls_class({
+          container: t.$('#qoogr-controls')
+        });
+
+        t.qmapper = new t.qmapper_class({
+          controls: t.controls
+        });
+
+        t.qmapper.on('change', t.update_graph);
+
+        var raw_data = t.get_raw_data();
+
         t.graph = new graph({
-          el: t.$('#qoogr-graph')[0],
+          container: t.$('#qoogr-graph')[0],
           graph_config: t.graph_config,
           raw_data: raw_data
         });
       });
+    },
+
+    teardown_graph: function() {
+      if (this.controls) {
+        this.controls.remove();
+      }
+      if (this.graph) {
+        this.graph.remove();
+      }
     },
 
     update_graph: function() {
@@ -140,11 +157,10 @@ define(function (require) {
 
   var ControlsView = Backbone.View.extend({
 
-    el: '#qoogr-controls',
-
     $tmpl: $(Handlebars.compile(controls_tmpl)()),
 
     initialize: function(options) {
+      this.container = this.options.container;
       this.render();
       // Set up individual filter widgets here.
 
@@ -153,6 +169,7 @@ define(function (require) {
     render: function() {
       console.log('rendering graphcontrolsview');
       this.$el.html( this.$tmpl );
+      this.container.append(this.$el);
     }
 
   });
