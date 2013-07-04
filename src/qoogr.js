@@ -99,7 +99,7 @@ define(function (require) {
 
     teardown_graph: function() {
       if (this.controls) {
-        this.controls.remove();
+        this.controls.teardown();
       }
       if (this.graph) {
         this.graph.remove();
@@ -170,6 +170,10 @@ define(function (require) {
       console.log('rendering graphcontrolsview');
       this.$el.html( this.$tmpl );
       this.container.append(this.$el);
+    },
+
+    teardown: function() {
+      // Call teardown on individual controls here.
     }
 
   });
