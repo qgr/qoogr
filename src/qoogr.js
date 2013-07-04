@@ -160,9 +160,15 @@ define(function (require) {
     $tmpl: $(Handlebars.compile(controls_tmpl)()),
 
     initialize: function(options) {
-      this.container = this.options.container;
-      this.render();
-      // Set up individual filter widgets here.
+      var t = this;
+      t.container = t.options.container;
+      t.render();
+
+      // Maintain an array of filter data objects to iterate over.
+      t.filter_collections = []
+
+      // Set up individual control widgets here.
+      // Don't forget to add the filter data objects to the array.
 
     },
 
@@ -187,22 +193,30 @@ define(function (require) {
       this.map_controls();
     },
 
-    map_controls: function() {
-      var t = this;
-      // Build a new qtree by reading each control's data model.
+    get_qtree_base: function() {
       // The following is a stub for a basic filter qtree.
-      t.qtree = {
+      return {
         select: {
           where: {
-            and: []
+            and: [] // We are going to insert filter clauses here.
           }
         }
       }
+    },
+
+    map_controls: function() {
+      var t = this;
+
+      // Build a new qtree by reading each control's data model.
+      t.qtree = t.get_qtree_base()
+
       // Alias the toplevel and subclause for brevity.
       var and = t.qtree.select.where.and;
 
-      // Push subclauses from control data models into query tree.
-      // and.push(t.controls.my_collection.get_subtree());
+      // Push subclauses from filter data objects into query tree.
+      _.each(t.controls.filter_collections, function(control_col) {
+        and.push(control_col.get_subtree());
+      });
 
       // Fire change event to alert listeners qtree has changed.
       t.trigger('change');
