@@ -52,15 +52,19 @@ define(function (require) {
       t.sel.on('load_graph', t.load_graph);
     },
 
+    resize_graph: function() {
+      // Resize graph area to fit viewport.
+      // Override with your custom resize logic.
+      this.$('#qoogr-graph').css({
+        height: $(window).height() - this.$('#qoogr-controls').height()
+      });
+    },
+
     load_graph: function(graph) {
 
       var t = this;
 
-      // Resize graph area to fit viewport.
-      t.$('#qoogr-graph').css({
-        width: $(window).width() - 30,
-        height: $(window).height() - 30,
-      });
+      t.resize_graph();
 
       // Set the graph config to that of newly-selected graph.
       t.graph_config = t.graph_config_map[graph];
