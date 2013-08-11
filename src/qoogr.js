@@ -43,6 +43,7 @@ define(function (require) {
       _.bindAll(t, 'load_graph', 'update_graph');
       t.array_map = t.options.array_map;
       t.graph_config_map = t.options.graph_config_map;
+      t.default_graph = t.options.default_graph;
       t.qexec = t.options.qexec;
 
       // Selector class is optional.
@@ -53,6 +54,11 @@ define(function (require) {
       if (t.sel) {
         t.sel = new t.sel_class();
         t.sel.on('load_graph', t.load_graph);
+      }
+
+      // Load default graph, if provided.
+      if (t.default_graph) {
+        t.load_graph(t.default_graph);
       }
     },
 
