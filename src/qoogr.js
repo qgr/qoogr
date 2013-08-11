@@ -43,11 +43,17 @@ define(function (require) {
       _.bindAll(t, 'load_graph', 'update_graph');
       t.array_map = t.options.array_map;
       t.graph_config_map = t.options.graph_config_map;
-      t.sel_class = t.options.selector_class || SelectorView;
       t.qexec = t.options.qexec;
 
-      t.sel = new t.sel_class();
-      t.sel.on('load_graph', t.load_graph);
+      // Selector class is optional.
+      t.sel_class = t.options.selector_class;
+
+      // If a selector class is provided, initialize it and
+      // bind graph loading to it.
+      if (t.sel) {
+        t.sel = new t.sel_class();
+        t.sel.on('load_graph', t.load_graph);
+      }
     },
 
     resize_graph: function() {
