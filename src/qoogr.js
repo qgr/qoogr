@@ -5,8 +5,6 @@ define(function (require) {
   var _ = require('underscore');
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
-  var selector_tmpl = require('text!tmpl/selector.html');
-  var controls_tmpl = require('text!tmpl/controls.html');
 
   // A Controller is really just a generic base class.
   var Controller = function(options) {
@@ -135,7 +133,8 @@ define(function (require) {
       'click li': 'load_view',
     },
 
-    $tmpl: $(Handlebars.compile(selector_tmpl)()),
+    // Subclasses should define a template, ala:
+    // $tmpl: $(Handlebars.compile(selector_tmpl)()),
 
     initialize: function() {
       this.render();
@@ -161,7 +160,8 @@ define(function (require) {
 
   var ControlsView = Backbone.View.extend({
 
-    $tmpl: $(Handlebars.compile(controls_tmpl)()),
+    // Subclasses shoud define a template here, ala:
+    // $tmpl: $(Handlebars.compile(controls_tmpl)()),
 
     initialize: function(options) {
       var t = this;
