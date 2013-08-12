@@ -231,7 +231,10 @@ define(function (require) {
 
       // Push subclauses from filter data objects into query tree.
       _.each(t.controls.filter_collections, function(control_col) {
-        and.push(control_col.get_subtree());
+        var subtree = control_col.get_subtree();
+        if (subtree) {
+          and.push(subtree);
+        }
       });
 
       // Fire change event to alert listeners qtree has changed.
