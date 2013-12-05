@@ -36,18 +36,23 @@ define(function (require) {
 
   var QoogrView = Backbone.View.extend({
 
-    el: $('#qoogr-box'),
+    id: 'qoogr-container',
 
     initialize: function(options) {
       var t = this;
       _.bindAll(t, 'load_graph', 'update_graph');
-      t.array_map = t.options.array_map;
-      t.graph_config_map = t.options.graph_config_map;
-      t.default_graph = t.options.default_graph;
-      t.qexec = t.options.qexec;
+      t.array_map = options.array_map;
+      t.graph_config_map = options.graph_config_map;
+      t.default_graph = options.default_graph;
+      t.qexec = options.qexec;
+      t.template = options.template;
+
+      // Render the provided template. The template must contain
+      // a form with id 'qoogr-controls` and a div with id `qoogr-graph'.
+      t.render();
 
       // Selector class is optional.
-      t.sel_class = t.options.selector_class;
+      t.sel_class = options.selector_class;
 
       // If a selector class is provided, initialize it and
       // bind graph loading to it.
@@ -60,6 +65,12 @@ define(function (require) {
       if (t.default_graph) {
         t.load_graph(t.default_graph);
       }
+    },
+
+    render: function() {
+      var t = this;
+      t.$el.html(t.template());
+      return t;
     },
 
     resize_graph: function() {
@@ -92,7 +103,7 @@ define(function (require) {
 
         // Initialize new Query Mapper and ControlsView
         t.controls = new t.controls_class({
-          container: t.$('#qoogr-controls')
+          container: t.$('#qoogr-controls-container')
         });
 
         t.qmapper = new t.qmapper_class({
@@ -172,8 +183,12 @@ define(function (require) {
 
   var ControlsView = Backbone.View.extend({
 
+    tagName: 'form',
+
+    id: 'qoogr-controls',
+
     // Subclasses shoud define a template here, ala:
-    // $tmpl: $(Handlebars.compile(controls_tmpl)()),
+    // template: Handlebars.compile(controls_tmpl),
 
     initialize: function(options) {
       var t = this;
@@ -190,7 +205,7 @@ define(function (require) {
 
     render: function() {
       console.log('rendering graphcontrolsview');
-      this.$el.html( this.$tmpl );
+      this.$el.html( this.template() );
       this.container.append(this.$el);
     },
 
